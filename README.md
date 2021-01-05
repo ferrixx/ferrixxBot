@@ -20,9 +20,10 @@
 ## ❗️ Dependencies
 
 ```sh
-- Gradle
-- Java
-- Javacord API
+- <a href="https://gradle.org/">Gradle</a>
+- <a href="https://www.java.com/de/">Java</a>
+- <a href="https://javacord.org/">Javacord API</a>
+- <a href="https://www.mysql.com/">MySQL</a>
 ```
 
 ## 🔨 Usage
