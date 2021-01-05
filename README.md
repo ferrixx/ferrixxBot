@@ -1,0 +1,2 @@
+# ferrixxBot
+ferrixxDE - DiscordBot
