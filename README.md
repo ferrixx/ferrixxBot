@@ -42,7 +42,7 @@ The Command syntax is !<command> <args>
 
 I have a German tutorial series on how to program a DiscordBot on YouTube, the first part also shows how to install and start it.
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/-SBL6Uzz4L4/0.jpg)](https://www.youtube.com/watch?v=-SBL6Uzz4L4)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/-SBL6Uzz4L4)](https://www.youtube.com/watch?v=-SBL6Uzz4L4)
 
 
 ## Author
