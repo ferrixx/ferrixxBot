@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to ferrixxBot 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.6-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.6.0-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -9,27 +9,37 @@
   </a>
 </p>
 
-> ferrixxBot is a DiscordBot written in Java with the <a href="https://javacord.org/">Javacord API</a>
+> ferrixxBot is a DiscordBot written in Java with the <a href="https://javacord.org">Javacord API</a>
+
+### 🏠 [Homepage](https://ferrixx.de)
 
 ### ✨ [Demo](https://ferrixx.de/discord)
 
-## Usage
+### 📝 [Trello (Update Logs)](https://trello.com/b/bjl2Pvqw/discord-bot)
+
+## ❗️ Dependencies
+
+```sh
+You need Gradle and Java on you Server running to use the Bot.
+```
+
+## 📩 Usage
 
 ```sh
 The Command syntax is !<command> <args>
 ```
 
-## Run tests
+## ✔️ Run tests
 
 ```sh
-!ping
+!ping on you DiscordServer to Test if the Bot is working.
 ```
 
 ## Author
 
 👤 **ferrixx**
 
-* Website: http://ferrixx.de
+* Website: https://ferrixx.de
 * Twitter: [@ferrixx1](https://twitter.com/ferrixx1)
 * Github: [@ferrixx](https://github.com/ferrixx)
 
