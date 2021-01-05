@@ -35,7 +35,7 @@ The Command syntax is !<command> <args>
 ## ✔️ Run tests
 
 ```sh
-!ping on you DiscordServer to Test if the Bot is working.
+!ping on you Discord Server to Test if the Bot is working.
 ```
 
 ## 🎞 Tutorial
@@ -55,7 +55,7 @@ I have a German tutorial series on how to program a DiscordBot on YouTube, the f
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://ferrixx.de/discord). 
+Contributions, issues and feature requests are welcome!<br />Feel free to check out my [Discord server](https://ferrixx.de/discord). 
 
 ## Show your support
 
