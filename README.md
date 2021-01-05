@@ -9,7 +9,7 @@
   </a>
 </p>
 
-> ferrixxBot is a DiscordBot written in Java with the Javacord API
+> ferrixxBot is a DiscordBot written in Java with the <a href="https://javacord.org/">Javacord API</a>
 
 ### ✨ [Demo](https://ferrixx.de/discord)
 
