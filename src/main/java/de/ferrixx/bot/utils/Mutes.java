@@ -11,13 +11,23 @@ import java.util.Date;
 public class Mutes {
 
     public static void addMute(String discordID, String reason, Timestamp unmute, Timestamp created) {
-        MySQL.update("INSERT INTO mutes(discordID, reason, unmute, created) VALUES ('"+discordID+"', '"+reason+"', '"+unmute+"', '"+created+"');");
+        try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("INSERT INTO mutes(discordID, reason, unmute, created) VALUES (? ,? ,? ,? );");
+            ps.setString(1, discordID);
+            ps.setString(2, reason);
+            ps.setTimestamp(3, unmute);
+            ps.setTimestamp(4, created);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public static Timestamp getMuteDuration(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT unmute FROM mutes WHERE discordID='"+discordID+"'");
 
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT unmute FROM mutes WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             rs.next();
             if(!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null) {
                 Timestamp muteduration = Timestamp.valueOf(rs.getString("unmute"));
@@ -31,9 +41,11 @@ public class Mutes {
     }
 
     public static Timestamp getCreatedTime(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT created FROM mutes WHERE discordID='"+discordID+"'");
 
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT created FROM mutes WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             rs.next();
             Timestamp created = Timestamp.valueOf(rs.getString("created"));
             if(created == null) {
@@ -61,9 +73,10 @@ public class Mutes {
     }
 
     public static boolean deleteMute(String discordID) {
-        MySQL.update("DELETE FROM mutes WHERE discordID='"+discordID+"'");
-
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("DELETE FROM mutes WHERE discordID=?");
+            ps.setString(1, discordID);
+            ps.executeQuery();
             return true;
         }catch (Exception e) {
             return false;
@@ -71,9 +84,11 @@ public class Mutes {
     }
 
     public static boolean hasMute(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT * FROM mutes WHERE discordID='"+discordID+"'");
 
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT * FROM mutes WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             rs.next();
             if(rs.getString("discordID") != null) {
                 return true;

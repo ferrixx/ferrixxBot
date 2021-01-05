@@ -12,7 +12,7 @@ jar {
 }
 
 group 'de.ferrixx'
-version '0.7'
+version '0.6.6'
 
 repositories {
     mavenCentral()

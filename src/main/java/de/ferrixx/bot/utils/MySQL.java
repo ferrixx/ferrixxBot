@@ -43,6 +43,18 @@ public class MySQL {
         }
     }
 
+    public static void createTable() {
+        if(isConnected()) {
+            try {
+                con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `discord`.`mutes` ( `id` INT NOT NULL AUTO_INCREMENT , `discordID` TEXT NOT NULL , `reason` TEXT NOT NULL , `unmute` TEXT NOT NULL , `created` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;");
+                con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `discord`.`users` ( `discordID` TEXT NOT NULL , `coins` INT NOT NULL DEFAULT '0' , `level` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`discordID`)) ENGINE = InnoDB;");
+                con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `discord`.`warns` ( `id` INT NOT NULL AUTO_INCREMENT , `discordID` TEXT NOT NULL , `reason` INT NOT NULL , `message` INT NOT NULL , `creator` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static boolean isConnected() {
         return (con == null ? false : true);
     }

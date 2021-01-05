@@ -1,5 +1,6 @@
 package de.ferrixx.bot.utils;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 /*
@@ -9,19 +10,31 @@ import java.sql.SQLException;
 public class Warns {
 
     public static void addWarn(String discordID, String reason, String message, String creator) {
-        MySQL.update("INSERT INTO warns(discordID, reason, message, creator) VALUES ('"+discordID+"', '"+reason+"', '"+message+"', '"+creator+"');");
+        try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("INSERT INTO warns(discordID, reason, message, creator) VALUES (?, ?, ?, ?);");
+            ps.setString(1, discordID);
+            ps.setString(2, reason);
+            ps.setString(3, message);
+            ps.setString(4, creator);
+            ps.executeQuery();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Integer getWarns(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT COUNT(*) AS warn_count FROM warns WHERE discordID='"+discordID+"'");
 
         try {
-            rs.next();
-            return rs.getInt("warn_count");
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT COUNT(*) AS warn_count FROM warns WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                return rs.getInt("warn_count");
+            }
         }catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return 0;
     }
 
 }

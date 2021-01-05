@@ -1,5 +1,6 @@
 package de.ferrixx.bot.utils;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -11,8 +12,10 @@ import java.util.Date;
 public class CoinSystem {
 
     public static boolean isUserExists(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT coins FROM users WHERE discordID="+discordID+";");
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT coins FROM users WHERE discordID=?;");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             return rs.next();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -23,21 +26,45 @@ public class CoinSystem {
     public static void updateCoins(String discordID, Integer coins) {
         int newcoins = getCoins(discordID)+coins;
         if(isUserExists(discordID)) {
-            MySQL.update("UPDATE users SET coins="+newcoins+" WHERE discordID="+discordID+";");
+            try {
+                PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("UPDATE users SET coins=? WHERE discordID=?");
+                ps.setInt(1, coins);
+                ps.setString(2, discordID);
+                ps.executeQuery();
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
-            MySQL.update("INSERT INTO users(discordID, coins) VALUES ('"+discordID+"', '"+coins+"');");
+            try{
+                PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("INSERT INTO users(discordID, coins) VALUES (?, ?);");
+                ps.setString(1, discordID);
+                ps.setInt(2, coins);
+                ps.executeQuery();
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
 
         }
     }
 
     public static void addLevel(String discordID, Integer level) {
         MySQL.update("UPDATE users SET level="+level+" WHERE discordID="+discordID+";");
+        try{
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("UPDATE users SET level=? WHERE discordID=?");
+            ps.setInt(1, level);
+            ps.setString(2, discordID);
+            ps.executeQuery();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Integer getCoins(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT coins FROM users WHERE discordID='" + discordID + "'");
 
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT coins FROM users WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             rs.next();
             return rs.getInt("coins");
         } catch (SQLException e) {
@@ -46,9 +73,10 @@ public class CoinSystem {
     }
 
     public static Integer getLevel(String discordID) {
-        ResultSet rs = MySQL.getResultSet("SELECT level FROM users WHERE discordID='" + discordID + "'");
-
         try {
+            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT level FROM users WHERE discordID=?");
+            ps.setString(1, discordID);
+            ResultSet rs = ps.executeQuery();
             rs.next();
             return rs.getInt("level");
         } catch (SQLException e) {
