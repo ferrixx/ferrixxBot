@@ -20,10 +20,12 @@
 ## ❗️ Dependencies
 
 ```sh
-You need Gradle and Java on you Server running to use the Bot.
+- Gradle
+- Java
+- Javacord API
 ```
 
-## 📩 Usage
+## 🔨 Usage
 
 ```sh
 The Command syntax is !<command> <args>
