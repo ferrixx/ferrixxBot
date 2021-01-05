@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to ferrixxBot 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.6.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.6.4-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
     <img alt="License: Apache" src="https://img.shields.io/badge/License-Apache-yellow.svg" />
   </a>
@@ -29,6 +29,8 @@
 ## 🔌 Usage
 
 ```sh
+Before you Start the Bot for the First Time, you have to Enter you Bot Tokens and MySQL Database dates in the privates.java at src/main/java/de/ferrixx/bot/settings/privates.java
+After every Start of the Bot you have to Select in which mode you wanna Start the Bot, type 1 (Enter or Dev) for the Development Bot Mode or 2 (normal) for the Normal Bot who can use everyone.
 The Command syntax is !<command> <args>
 ```
 
