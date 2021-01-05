@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'de.ferrixx.bot.main.Main'
+        )
+    }
+}
+
+group 'de.ferrixx'
+version '0.7'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.javacord:javacord:3.1.2'
+    implementation 'com.sedmelluq:lavaplayer:1.3.65'
+    implementation 'mysql:mysql-connector-java:5.1.6'
+    implementation 'com.vdurmont:emoji-java:5.1.1'
+}
