@@ -20,13 +20,13 @@
 ## ❗️ Dependencies
 
 ```sh
-- <a href="https://gradle.org/">Gradle</a>
-- <a href="https://www.java.com/de/">Java</a>
-- <a href="https://javacord.org/">Javacord API</a>
-- <a href="https://www.mysql.com/">MySQL</a>
+- https://gradle.org | Gradle
+- https://www.java.com/de | Java
+- https://javacord.org | Javacord
+- https://www.mysql.com | MySQL
 ```
 
-## 🔨 Usage
+## 🔌 Usage
 
 ```sh
 The Command syntax is !<command> <args>
