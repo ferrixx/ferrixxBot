@@ -12,11 +12,12 @@ public class Mutes {
 
     public static void addMute(String discordID, String reason, Timestamp unmute, Timestamp created) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("INSERT INTO mutes(discordID, reason, unmute, created) VALUES (? ,? ,? ,? );");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("INSERT INTO mutes(discordID, reason, unmute, created) VALUES (? ,? ,? ,? );");
             ps.setString(1, discordID);
             ps.setString(2, reason);
             ps.setTimestamp(3, unmute);
             ps.setTimestamp(4, created);
+            ps.executeQuery();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -25,16 +26,15 @@ public class Mutes {
     public static Timestamp getMuteDuration(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT unmute FROM mutes WHERE discordID=?");
+            PreparedStatement ps = MySQL.getPreparedStatement("SELECT unmute FROM mutes WHERE discordID=?");
+
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            if(!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null) {
-                Timestamp muteduration = Timestamp.valueOf(rs.getString("unmute"));
-                return muteduration;
-            } else {
-                return null;
-            }
+                if(rs.next() && (!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null)) {
+                    Timestamp muteduration = Timestamp.valueOf(rs.getString("unmute"));
+                    return muteduration;
+                } // should now work
+            return null;
         }catch (SQLException e) {
             return null;
         }
@@ -43,7 +43,7 @@ public class Mutes {
     public static Timestamp getCreatedTime(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT created FROM mutes WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT created FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -74,7 +74,7 @@ public class Mutes {
 
     public static boolean deleteMute(String discordID) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("DELETE FROM mutes WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("DELETE FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ps.executeQuery();
             return true;
@@ -86,7 +86,7 @@ public class Mutes {
     public static boolean hasMute(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT * FROM mutes WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT * FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();

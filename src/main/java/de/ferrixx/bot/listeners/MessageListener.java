@@ -78,7 +78,7 @@ public class MessageListener implements MessageCreateListener {
 
 
         /* CHECK IF MUTED WHEN NOT UNMUTE */
-
+        System.out.println(messageuser.getIdAsString());
         if(Mutes.getMuteDuration(messageuser.getIdAsString()) != null) {
             if(Mutes.checkifMuted(messageuser.getIdAsString()) == false) {
                 if(checkifTeam(presentedColor.toString())) {
@@ -93,6 +93,8 @@ public class MessageListener implements MessageCreateListener {
             } else if(Mutes.checkifMuted(messageuser.getIdAsString()) == true) {
                 Mutes.deleteMute(messageuser.getIdAsString());
             }
+
+        } else {
 
         }
 
@@ -114,9 +116,8 @@ public class MessageListener implements MessageCreateListener {
 
 
         /* COINSYSTEM ADD COINS FOR WORDS */
-
+    // was is der error? gibt kein was genau klappt denn ned
         Integer addcoins = 0;
-
         if(args.length <= 30) {
             addcoins = 30;
         } else if(args.length <= 25) {
@@ -182,9 +183,9 @@ public class MessageListener implements MessageCreateListener {
             e.getChannel().sendMessage(coinsystem);
         } else if(CoinSystem.getCoins(messageuser.getIdAsString()) >= 200 && CoinSystem.getLevel(messageuser.getIdAsString()) == 1) {
             CoinSystem.addLevel(messageuser.getIdAsString(), 2);
-            coinsystem.setTitle("Du bist nun Level 12! `"+messageuser.getDisplayName(server)+"`");
+            coinsystem.setTitle("Du bist nun Level 1! `"+messageuser.getDisplayName(server)+"`");
             e.getChannel().sendMessage(coinsystem);
-        } else if(CoinSystem.getCoins(messageuser.getIdAsString()) >= 100 && CoinSystem.getLevel(messageuser.getIdAsString()) == 0) {
+        } else if(CoinSystem.getCoins(messageuser.getIdAsString()) >= 100) {
             CoinSystem.addLevel(messageuser.getIdAsString(), 1);
             coinsystem.setTitle("Du bist nun Level 1! `"+messageuser.getDisplayName(server)+"`");
             e.getChannel().sendMessage(coinsystem);

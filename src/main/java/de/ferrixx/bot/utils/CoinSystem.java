@@ -13,10 +13,10 @@ public class CoinSystem {
 
     public static boolean isUserExists(String discordID) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT coins FROM users WHERE discordID=?;");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT coins FROM users WHERE discordID=?;");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            return  rs.next();
         }catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -27,19 +27,21 @@ public class CoinSystem {
         int newcoins = getCoins(discordID)+coins;
         if(isUserExists(discordID)) {
             try {
-                PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("UPDATE users SET coins=? WHERE discordID=?");
-                ps.setInt(1, coins);
+                PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("UPDATE users SET coins=? WHERE discordID=?");
+                ps.setInt(1, newcoins);
                 ps.setString(2, discordID);
-                ps.executeQuery();
+                ps.executeUpdate(); // UPDATE  geht ned mit executeQuery, must du raussuchen womit das geht
+                ps.close();
             }catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
             try{
-                PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("INSERT INTO users(discordID, coins) VALUES (?, ?);");
+                PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("INSERT INTO users(discordID, coins) VALUES (?, ?);");
                 ps.setString(1, discordID);
                 ps.setInt(2, coins);
-                ps.executeQuery();
+                ps.executeUpdate();
+                ps.close();
             }catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -50,7 +52,7 @@ public class CoinSystem {
     public static void addLevel(String discordID, Integer level) {
         MySQL.update("UPDATE users SET level="+level+" WHERE discordID="+discordID+";");
         try{
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("UPDATE users SET level=? WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("UPDATE users SET level=? WHERE discordID=?");
             ps.setInt(1, level);
             ps.setString(2, discordID);
             ps.executeQuery();
@@ -62,7 +64,7 @@ public class CoinSystem {
     public static Integer getCoins(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT coins FROM users WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT coins FROM users WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -74,7 +76,7 @@ public class CoinSystem {
 
     public static Integer getLevel(String discordID) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT level FROM users WHERE discordID=?");
+            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT level FROM users WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();

@@ -54,7 +54,7 @@ public class Main {
 
         api.addListener(new MessageListener());
 
-        MySQL.createTable();
+        //MySQL.createTable();
 
         System.out.println("Invite the Bot using the following Link: " + api.createBotInvite());
     }

@@ -83,4 +83,16 @@ public class MySQL {
         return null;
     }
 
+    public static PreparedStatement getPreparedStatement(String qry) {
+        if(isConnected())
+        {
+            try{
+                return con.prepareStatement(qry);
+            } catch(SQLException e) {
+    // U do that
+            }
+        }
+        return  null;
+    }
+
 }
