@@ -1,8 +1,9 @@
 package de.ferrixx.bot.utils;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 /*
  * Copyright (c) 2020 ferrixxDE - Justin Ippen
@@ -12,7 +13,7 @@ public class Mutes {
 
     public static void addMute(String discordID, String reason, Timestamp unmute, Timestamp created) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("INSERT INTO mutes(discordID, reason, unmute, created) VALUES (? ,? ,? ,? );");
+            PreparedStatement ps = MySQL.getPreparedStatement("INSERT INTO mutes(discordID, reason, unmute, created) VALUES (? ,? ,? ,? );");
             ps.setString(1, discordID);
             ps.setString(2, reason);
             ps.setTimestamp(3, unmute);
@@ -30,12 +31,16 @@ public class Mutes {
 
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
-                if(rs.next() && (!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null)) {
-                    Timestamp muteduration = Timestamp.valueOf(rs.getString("unmute"));
-                    return muteduration;
-                } // should now work
+            if (rs.next()) { // I doubt rs.next() is even needed here
+                return Timestamp.valueOf(rs.getString("unmute"));
+            }
+            /*if (rs.next() && (!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null)) {
+                return Timestamp.valueOf(rs.getString("unmute"));
+            } // should now work | Nope, your if condition was redundant because of the OR rs != null. If rs was null
+            you'd get an NullPointerException at rs.next() and when you don't the whole if condition automatically
+            becomes true*/
             return null;
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             return null;
         }
     }
@@ -43,16 +48,12 @@ public class Mutes {
     public static Timestamp getCreatedTime(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT created FROM mutes WHERE discordID=?");
+            PreparedStatement ps = MySQL.getPreparedStatement("SELECT created FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            Timestamp created = Timestamp.valueOf(rs.getString("created"));
-            if(created == null) {
-                return null;
-            }
-            return created;
-        }catch (SQLException e) {
+            return Timestamp.valueOf(rs.getString("created"));
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
@@ -61,41 +62,32 @@ public class Mutes {
     public static boolean checkifMuted(String discordID) {
         Date currentdate = new Date();
         Timestamp currenttime = new Timestamp(currentdate.getTime());
-        if(getMuteDuration(discordID) == null) {
+        if (getMuteDuration(discordID) == null) {
             return false;
         } else {
-            if(currenttime.compareTo(getMuteDuration(discordID)) > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return currenttime.compareTo(getMuteDuration(discordID)) > 0;
         }
     }
 
-    public static boolean deleteMute(String discordID) {
+    public static void deleteMute(String discordID) {
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("DELETE FROM mutes WHERE discordID=?");
+            PreparedStatement ps = MySQL.getPreparedStatement("DELETE FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ps.executeQuery();
-            return true;
-        }catch (Exception e) {
-            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public static boolean hasMute(String discordID) {
 
         try {
-            PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("SELECT * FROM mutes WHERE discordID=?");
+            PreparedStatement ps = MySQL.getPreparedStatement("SELECT * FROM mutes WHERE discordID=?");
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            if(rs.getString("discordID") != null) {
-                return true;
-            } else {
-                return false;
-            }
-        }catch (SQLException e) {
+            return rs.getString("discordID") != null;
+        } catch (SQLException e) {
             return false;
         }
     }

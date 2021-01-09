@@ -1,6 +1,6 @@
 package de.ferrixx.bot.utils;
 
-import de.ferrixx.bot.settings.privates;
+import de.ferrixx.bot.settings.Privates;
 
 import java.sql.*;
 /*
@@ -12,22 +12,22 @@ public class MySQL {
     public static Connection con;
 
     public static void devconnect() {
-        if(!isConnected()) {
+        if (!isConnected()) {
             try {
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", privates.username, privates.devpassword);
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", Privates.username, Privates.devpassword);
                 System.out.println("Datenbank Verbindung aufgebaut!");
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 System.out.println("Fehler beim Aufbau der Datenbank Verbindung!" + e.getMessage());
             }
         }
     }
 
     public static void connect() {
-        if(!isConnected()) {
+        if (!isConnected()) {
             try {
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", privates.username, privates.password);
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", Privates.username, Privates.password);
                 System.out.println("Datenbank Verbindung aufgebaut!");
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("Fehler beim Aufbau der Datenbank Verbindung!" + e.getMessage());
             }
@@ -35,16 +35,17 @@ public class MySQL {
     }
 
     public static void close() {
-        if(isConnected()) {
+        if (isConnected()) {
             try {
                 con.close();
-            } catch(SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
 
     public static void createTable() {
-        if(isConnected()) {
+        if (isConnected()) {
             try {
                 con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `discord`.`mutes` ( `id` INT NOT NULL AUTO_INCREMENT , `discordID` TEXT NOT NULL , `reason` TEXT NOT NULL , `unmute` TEXT NOT NULL , `created` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;");
                 con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `discord`.`users` ( `discordID` TEXT NOT NULL , `coins` INT NOT NULL DEFAULT '0' , `level` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`discordID`)) ENGINE = InnoDB;");
@@ -56,7 +57,7 @@ public class MySQL {
     }
 
     public static boolean isConnected() {
-        return (con == null ? false : true);
+        return (con != null);
     }
 
     public static Connection getConnection() {
@@ -64,35 +65,36 @@ public class MySQL {
     }
 
     public static void update(String qry) {
-        if(isConnected()) {
+        if (isConnected()) {
             try {
                 con.createStatement().executeUpdate(qry);
-            } catch(SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
 
     public static ResultSet getResultSet(String qry) {
-        if(isConnected()) {
+        if (isConnected()) {
             try {
                 PreparedStatement ps = con.prepareStatement(qry);
                 return ps.executeQuery();
-            } catch(SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return null;
     }
 
     public static PreparedStatement getPreparedStatement(String qry) {
-        if(isConnected())
-        {
-            try{
+        if (isConnected()) {
+            try {
                 return con.prepareStatement(qry);
-            } catch(SQLException e) {
-    // U do that
+            } catch (SQLException e) {
+                // U do that
             }
         }
-        return  null;
+        return null;
     }
 
 }

@@ -17,21 +17,18 @@ public class Warns {
             ps.setString(3, message);
             ps.setString(4, creator);
             ps.executeQuery();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static Integer getWarns(String discordID) {
-
         try {
             PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT COUNT(*) AS warn_count FROM warns WHERE discordID=?");
-            ps.setString(1, discordID);
+            ps.setString(1, discordID); // Possible NullPointerException
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                return rs.getInt("warn_count");
-            }
-        }catch (SQLException e) {
+            return rs.getInt("warn_count");
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
