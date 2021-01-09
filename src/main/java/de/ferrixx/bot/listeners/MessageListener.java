@@ -520,7 +520,6 @@ public class MessageListener implements MessageCreateListener {
                     }
                 } else if(e.getMessageContent().startsWith("!play")) {
                     if(args.length == 2) {
-                        if (args[1].startsWith("https://www.youtube.com/") || args[1].startsWith("https://youtube.com/")) {
                             if (messageuser.getConnectedVoiceChannel(server).isPresent()) {
                                 ServerVoiceChannel channel = messageuser.getConnectedVoiceChannel(server).get();
 
@@ -555,16 +554,13 @@ public class MessageListener implements MessageCreateListener {
 
                                     @Override
                                     public void loadFailed(FriendlyException exception) {
-                                        e.getChannel().sendMessage(new EmbedBuilder().setTitle("Es ist ein Fehler aufgetreten!").setColor(settings.embedcolorerror));
+                                        e.getChannel().sendMessage(new EmbedBuilder().setTitle("Fehler beim Laden der Musik!").setColor(settings.embedcolorerror));
 
                                     }
                                 });
                             } else {
                                 e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du befindest dich in keinem Voice-Channel.").setColor(settings.embedcolorerror));
                             }
-                        } else {
-                            e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du musst einen YouTube link angeben.").setColor(settings.embedcolorerror));
-                        }
                     } else {
                         e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du musst einen YouTube link angeben.").setColor(settings.embedcolorerror));
                     }
