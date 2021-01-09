@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to ferrixxBot 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.6.6-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.7.3-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
     <img alt="License: Apache" src="https://img.shields.io/badge/License-Apache-yellow.svg" />
   </a>
