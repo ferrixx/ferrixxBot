@@ -27,7 +27,7 @@ public class settings {
     /* Bot Zeugs */
     public static String copyright = "Copyright 2021 ferrixx";
     public static String ferrixxlogo = "https://ferrixx.de/images/logo2021.png";
-    public static String botversion = "v0.6.6";
+    public static String botversion = "0.7.3";
 
 
     /* CHATFILTER */

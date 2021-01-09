@@ -30,7 +30,7 @@ public class CoinSystem {
                 PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("UPDATE users SET coins=? WHERE discordID=?");
                 ps.setInt(1, newcoins);
                 ps.setString(2, discordID);
-                ps.executeUpdate(); // UPDATE  geht ned mit executeQuery, must du raussuchen womit das geht
+                ps.executeUpdate();
                 ps.close();
             }catch (SQLException e) {
                 e.printStackTrace();
@@ -55,7 +55,7 @@ public class CoinSystem {
             PreparedStatement ps = (PreparedStatement) MySQL.getPreparedStatement("UPDATE users SET level=? WHERE discordID=?");
             ps.setInt(1, level);
             ps.setString(2, discordID);
-            ps.executeQuery();
+            ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
         }

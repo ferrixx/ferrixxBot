@@ -1,15 +1,23 @@
 package de.ferrixx.bot.listeners;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.vdurmont.emoji.EmojiParser;
 import de.ferrixx.bot.main.Main;
 import de.ferrixx.bot.settings.settings;
 import de.ferrixx.bot.utils.CoinSystem;
+import de.ferrixx.bot.utils.LavaplayerAudioSource;
 import de.ferrixx.bot.utils.Mutes;
 import de.ferrixx.bot.utils.Warns;
+import org.javacord.api.audio.AudioSource;
 import org.javacord.api.entity.activity.Activity;
-import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.channel.ServerTextChannel;
-import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.channel.*;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAuthor;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -68,6 +76,10 @@ public class MessageListener implements MessageCreateListener {
         } else {
             e.getChannel().sendMessage(new EmbedBuilder().setColor(settings.embedcolorerror).setTitle("Bitte benutze Befehle auf einem Server Channel aus und nicht im Privaten Chat!"));
             return;
+        }
+
+        if(settings.devMode == true) {
+            if(!server.getName().startsWith("Dev")) return;
         }
 
         /* VARIABLES */
@@ -185,7 +197,7 @@ public class MessageListener implements MessageCreateListener {
             CoinSystem.addLevel(messageuser.getIdAsString(), 2);
             coinsystem.setTitle("Du bist nun Level 1! `"+messageuser.getDisplayName(server)+"`");
             e.getChannel().sendMessage(coinsystem);
-        } else if(CoinSystem.getCoins(messageuser.getIdAsString()) >= 100) {
+        } else if(CoinSystem.getCoins(messageuser.getIdAsString()) >= 100 && CoinSystem.getLevel(messageuser.getIdAsString()) == null) {
             CoinSystem.addLevel(messageuser.getIdAsString(), 1);
             coinsystem.setTitle("Du bist nun Level 1! `"+messageuser.getDisplayName(server)+"`");
             e.getChannel().sendMessage(coinsystem);
@@ -212,8 +224,8 @@ public class MessageListener implements MessageCreateListener {
                         .setDescription("Der Bot wurde am 27.12.2020 von ferrixx Programmiert.\n" +
                                 "Der Bot befindet sich derzeit in der Version " + settings.botversion)
                         .setAuthor("ferrixxBot " + settings.botversion, "http://ferrixx.de/discordbot", settings.ferrixxlogo)
-                        .addField("\uD83D\uDCCC Features", "ChatFilter \n CoinFlip for Fun \n CoinSystem \n")
-                        .addField("\uD83D\uDCDD Commands", "!commands \n !help \n !ping \n !userinfo \n !coinflip")
+                        .addField("\uD83D\uDCCC Features", "ChatFilter \n CoinFlip for Fun \n CoinSystem \n MusikBot")
+                        .addField("\uD83D\uDCDD Commands", "!commands \n !help \n !ping \n !userinfo \n !coinflip \n !play <youtube link>")
                         .setColor(settings.embedcolor)
                         .setFooter(settings.copyright, settings.ferrixxlogo)
                         .setThumbnail(settings.ferrixxlogo);
@@ -231,7 +243,7 @@ public class MessageListener implements MessageCreateListener {
                     messageuser.sendMessage(embedteam);
                 }
 
-            } else if (e.getMessageContent().equalsIgnoreCase("!userinfo")) {
+            } else if (e.getMessageContent().startsWith("!userinfo")) {
                 if(!e.getMessage().getMentionedUsers().isEmpty()) {
                     User user = e.getMessage().getMentionedUsers().get(0);
                     if(server.getMemberById(user.getIdAsString()).isPresent()) {
@@ -309,70 +321,70 @@ public class MessageListener implements MessageCreateListener {
                             }
 
 
-                        if (args[2].contains("1")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Spam", e.getMessageContent(), messageuser.getName());
-                                WarnMethod(user1, e.getChannel(), "Team", "Spam", server);
+                            if (args[2].contains("1")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Spam", e.getMessageContent(), messageuser.getName());
+                                    WarnMethod(user1, e.getChannel(), "Team", "Spam", server);
 
-                        } else if (args[2].contains("2")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Bad Words", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Bad Words", server);
+                            } else if (args[2].contains("2")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Bad Words", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Bad Words", server);
 
-                        } else if (args[2].contains("3")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - NSFW Bilder im falschen Chat", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "NSFW Bilder im falschen Chat", server);
+                            } else if (args[2].contains("3")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - NSFW Bilder im falschen Chat", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "NSFW Bilder im falschen Chat", server);
 
-                        } else if (args[2].contains("4")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Provokation", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Provokation", server);
+                            } else if (args[2].contains("4")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Provokation", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Provokation", server);
 
-                        } else if (args[2].contains("5")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Verhalten", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Verhalten", server);
+                            } else if (args[2].contains("5")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Verhalten", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Verhalten", server);
 
-                        } else if (args[2].contains("6")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Trolling ", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Trolling ", server);
+                            } else if (args[2].contains("6")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Trolling ", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Trolling ", server);
 
-                        } else if (args[2].contains("7")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Channel Hopping", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Channel Hopping", server);
+                            } else if (args[2].contains("7")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Channel Hopping", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Channel Hopping", server);
 
-                        } else if (args[2].contains("8")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Beleidigung", e.getMessageContent(), messageuser.getName());
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Beleidigung", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Beleidigung - 2 Warns", server);
+                            } else if (args[2].contains("8")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Beleidigung", e.getMessageContent(), messageuser.getName());
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Beleidigung", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Beleidigung - 2 Warns", server);
 
-                        } else if (args[2].contains("9")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Starke Provokation", e.getMessageContent(), messageuser.getName());
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Starke Provokation", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Starke Provokation - 2 Warns", server);
+                            } else if (args[2].contains("9")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Starke Provokation", e.getMessageContent(), messageuser.getName());
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Starke Provokation", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Starke Provokation - 2 Warns", server);
 
-                        } else if (args[2].contains("10")) {
-                            e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
-                            e.getMessage().delete();
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Datenschutz", e.getMessageContent(), messageuser.getName());
-                            Warns.addWarn(user1.getIdAsString(), "Warn - Datenschutz", e.getMessageContent(), messageuser.getName());
-                            WarnMethod(user1, e.getChannel(), "Team", "Datenschutz - 2 Warns", server);
+                            } else if (args[2].contains("10")) {
+                                e.getChannel().bulkDelete(e.getChannel().getMessagesAsStream().filter(message -> message.getAuthor().getId() == user1.getId()).limit(3).collect(Collectors.toList()));
+                                e.getMessage().delete();
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Datenschutz", e.getMessageContent(), messageuser.getName());
+                                Warns.addWarn(user1.getIdAsString(), "Warn - Datenschutz", e.getMessageContent(), messageuser.getName());
+                                WarnMethod(user1, e.getChannel(), "Team", "Datenschutz - 2 Warns", server);
 
-                        }
+                            }
 
                         } else {
                             User user1 = e.getMessage().getMentionedUsers().get(0);
@@ -505,6 +517,56 @@ public class MessageListener implements MessageCreateListener {
                         e.getMessage().addReaction(EmojiParser.parseToUnicode(":black_large_square:"));
                     } else if(int_random == 2) {
                         e.getMessage().addReaction(EmojiParser.parseToUnicode(":white_large_square:"));
+                    }
+                } else if(e.getMessageContent().startsWith("!play")) {
+                    if(args.length == 2) {
+                        if (args[1].startsWith("https://www.youtube.com/watch") || args[1].startsWith("https://youtube.com/watch")) {
+                            if (messageuser.getConnectedVoiceChannel(server).isPresent()) {
+                                ServerVoiceChannel channel = messageuser.getConnectedVoiceChannel(server).get();
+
+                                AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+                                playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+                                AudioPlayer player = playerManager.createPlayer();
+
+                                AudioSource source = new LavaplayerAudioSource(Main.api, player);
+
+                                channel.connect().thenAccept(audioConnection -> audioConnection.setAudioSource(source)).exceptionally(error -> {
+                                    error.printStackTrace();
+                                    return null;
+                                });
+
+                                playerManager.loadItem(args[1], new AudioLoadResultHandler() {
+                                    @Override
+                                    public void trackLoaded(AudioTrack track) {
+                                        player.playTrack(track);
+                                    }
+
+                                    @Override
+                                    public void playlistLoaded(AudioPlaylist playlist) {
+                                        for (AudioTrack track : playlist.getTracks()) {
+                                            player.playTrack(track);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void noMatches() {
+                                        e.getChannel().sendMessage(new EmbedBuilder().setTitle("Dieses Video existiert nicht!").setColor(settings.embedcolorerror));
+                                    }
+
+                                    @Override
+                                    public void loadFailed(FriendlyException exception) {
+                                        e.getChannel().sendMessage(new EmbedBuilder().setTitle("Es ist ein Fehler aufgetreten!").setColor(settings.embedcolorerror));
+
+                                    }
+                                });
+                            } else {
+                                e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du befindest dich in keinem Voice-Channel.").setColor(settings.embedcolorerror));
+                            }
+                        } else {
+                            e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du musst einen YouTube link angeben.").setColor(settings.embedcolorerror));
+                        }
+                    } else {
+                        e.getChannel().sendMessage(new EmbedBuilder().setTitle("Du musst einen YouTube link angeben.").setColor(settings.embedcolorerror));
                     }
                 }
             }
