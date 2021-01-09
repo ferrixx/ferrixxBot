@@ -520,7 +520,7 @@ public class MessageListener implements MessageCreateListener {
                     }
                 } else if(e.getMessageContent().startsWith("!play")) {
                     if(args.length == 2) {
-                        if (args[1].startsWith("https://www.youtube.com/watch") || args[1].startsWith("https://youtube.com/watch")) {
+                        if (args[1].startsWith("https://www.youtube.com/") || args[1].startsWith("https://youtube.com/")) {
                             if (messageuser.getConnectedVoiceChannel(server).isPresent()) {
                                 ServerVoiceChannel channel = messageuser.getConnectedVoiceChannel(server).get();
 
