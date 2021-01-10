@@ -70,7 +70,7 @@ public class MessageListener implements MessageCreateListener {
 
             server.banUser(messageUser, 0, "Zu viele Verwarnungen!");
 
-        } else if (warns > 3) {
+        } else if (warns > 2) {
             switch (warns) {
                 case 9 -> {
                     Date date = new Date();
@@ -137,18 +137,18 @@ public class MessageListener implements MessageCreateListener {
                     // 30 Minuten Mute
                     Mutes.addMute(messageUser.getIdAsString(), format + " - " + reason + " - 30 Minuten", unmute, created);
                 }
-            }
-            /*if (warns == 3) { Always false
-                Date date = new Date();
-                Timestamp created = new Timestamp(date.getTime());
-                Timestamp unmute = new Timestamp(date.getTime());
-                unmute.setMinutes(unmute.getMinutes() + 15);
+                case 3 -> {
+                    Date date = new Date();
+                    Timestamp created = new Timestamp(date.getTime());
+                    Timestamp unmute = new Timestamp(date.getTime());
+                    unmute.setMinutes(unmute.getMinutes() + 30);
 
-                embed.addField("Verwarnung Nr. " + warns, "Strafe: 15 Minuten Mute");
-                channel.sendMessage(embed);
-                // 15 Minuten Mute
-                Mutes.addMute(messageUser.getIdAsString(), format + " - " + reason + " - 15 Minuten", unmute, created);
-            }*/
+                    embed.addField("Verwarnung Nr. " + warns, "Strafe: 15 Minuten Mute");
+                    channel.sendMessage(embed);
+                    // 15 Minuten Mute
+                    Mutes.addMute(messageUser.getIdAsString(), format + " - " + reason + " - 15 Minuten", unmute, created);
+                }
+            }
         } else if (warns <= 2) {
             embed.addField("Verwarnung Nr. " + warns, "Strafe: keine");
             channel.sendMessage(embed);
@@ -212,29 +212,24 @@ public class MessageListener implements MessageCreateListener {
             }
 
             /* COINSYSTEM ADD COINS FOR WORDS */
-            // was is der error? gibt kein was genau klappt denn ned
-            /* These ifs before didn't make any sense.
-            If args.length was 30 or smaller, the first if was always being executed.
-            If it was above 30 none were executed.
-             */
+
             int addCoins = 0;
-            if (args.length <= 0) {
-                addCoins = 2;
-            } else if (args.length <= 5) {
-                addCoins = 6;
-            } else if (args.length <= 10) {
-                addCoins = 10;
-            } else if (args.length <= 15) {
-                addCoins = 15;
-            } else if (args.length <= 20) {
-                addCoins = 20;
+            if (args.length <= 30) {
+                addCoins = 30;
             } else if (args.length <= 25) {
                 addCoins = 25;
-            } else if (args.length <= 30) {
-                addCoins = 30;
+            } else if (args.length <= 20) {
+                addCoins = 20;
+            } else if (args.length <= 15) {
+                addCoins = 15;
+            } else if (args.length <= 10) {
+                addCoins = 10;
+            } else if (args.length <= 5) {
+                addCoins = 6;
+            } else if (args.length <= 0) {
+                addCoins = 2;
             }
 
-            // I assume you meant to add extra coins if the user is a VIP or team member?
             if (checkifVIP(presentedColor.toString())) {
                 addCoins += 5;
             }
@@ -296,7 +291,7 @@ public class MessageListener implements MessageCreateListener {
                 coinSystem.setTitle("Du bist nun Level 1! `" + messageUser.getDisplayName(server) + "`");
                 e.getChannel().sendMessage(coinSystem);
             } else if (CoinSystem.getCoins(messageUser.getIdAsString()) >= 100 &&
-                    CoinSystem.getLevel(messageUser.getIdAsString()) == 0) { //getLevel() never returns null
+                    CoinSystem.getLevel(messageUser.getIdAsString()) == 0) {
                 CoinSystem.addLevel(messageUser.getIdAsString(), 1);
                 coinSystem.setTitle("Du bist nun Level 1! `" + messageUser.getDisplayName(server) + "`");
                 e.getChannel().sendMessage(coinSystem);
@@ -392,7 +387,7 @@ public class MessageListener implements MessageCreateListener {
                         }
                     }
                     case "!warn" -> {
-                        if (compareGroupColors(presentedColor.toString(), Settings.teamlist)) {
+                        if (checkifTeam(presentedColor.toString())) {
                             if (args[1].contains("help")) {
                                 e.getMessage().delete();
                                 EmbedBuilder embed = new EmbedBuilder()
@@ -606,7 +601,7 @@ public class MessageListener implements MessageCreateListener {
                         if (e.getMessageAuthor().isServerAdmin()) {
                             User user1 = e.getMessage().getMentionedUsers().get(0);
                             int warns = Warns.getWarns(user1.getIdAsString());
-                            if (warns >= 4 && warns <= 10) {
+                            if (warns >= 3 && warns <= 10) {
                                 switch (warns) {
                                     case 9 -> {
                                         if (!Mutes.checkifMuted(user1.getIdAsString())) {
@@ -650,18 +645,14 @@ public class MessageListener implements MessageCreateListener {
                                             e.getChannel().sendMessage(new EmbedBuilder().setColor(Settings.embedcoloryellow).setTitle("Dieser User " + user1.getName() + " war bereits für 30 Minuten gemutet"));
                                         }
                                     }
-                                }
-                                    /* Never gets called because of outer if condition warn >= 4
-                                    else if (warns == 3) {
-                                        if (Mutes.checkifMuted(user1.getIdAsString()) == false) {
-                                            e.getChannel().sendMessage(new EmbedBuilder().setColor(settings.embedcolormutes).setTitle("Dieser User " + user1.getName() + " ist aktuell für 15 Minuten gemutet"));
-                                        } else if (Mutes.checkifMuted(user1.getIdAsString()) == true) {
-                                            e.getChannel().sendMessage(new EmbedBuilder().setColor(settings.embedcoloryellow).setTitle("Dieser User " + user1.getName() + " war bereits für 15 Minuten gemutet"));
+                                    case 3 -> {
+                                        if (!Mutes.checkifMuted(user1.getIdAsString())) {
+                                            e.getChannel().sendMessage(new EmbedBuilder().setColor(Settings.embedcolormutes).setTitle("Dieser User " + user1.getName() + " ist aktuell für 15 Minuten gemutet"));
+                                        } else if (Mutes.checkifMuted(user1.getIdAsString())) {
+                                            e.getChannel().sendMessage(new EmbedBuilder().setColor(Settings.embedcoloryellow).setTitle("Dieser User " + user1.getName() + " war bereits für 15 Minuten gemutet"));
                                         }
                                     }
-                                } else if (warns == 10) { Always false
-                                    e.getChannel().sendMessage(new EmbedBuilder().setColor(settings.embedcolorwarns).setTitle("Dieser User war schon mehrmals gemutet und hat nun einen Ban"));
-                                }*/
+                                }
                             } else if (warns <= 2) {
                                 e.getChannel().sendMessage(new EmbedBuilder()
                                         .setColor(Settings.embedcolorgreen)

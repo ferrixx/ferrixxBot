@@ -25,7 +25,7 @@ public class Warns {
     public static Integer getWarns(String discordID) {
         try {
             PreparedStatement ps = (PreparedStatement) MySQL.getResultSet("SELECT COUNT(*) AS warn_count FROM warns WHERE discordID=?");
-            ps.setString(1, discordID); // Possible NullPointerException
+            ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
             return rs.getInt("warn_count");
         } catch (SQLException e) {

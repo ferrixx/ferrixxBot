@@ -12,7 +12,11 @@ public class CoinSystem {
     public static boolean isUserExists(String discordID) {
         try {
             PreparedStatement ps = MySQL.getPreparedStatement("SELECT coins FROM users WHERE discordID=?;");
-            ps.setString(1, discordID);
+            try {
+                ps.setString(1, discordID);
+            } catch(NullPointerException nullPointerException) {
+                nullPointerException.printStackTrace();
+            }
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {
@@ -26,7 +30,11 @@ public class CoinSystem {
         if (isUserExists(discordID)) {
             try {
                 PreparedStatement ps = MySQL.getPreparedStatement("UPDATE users SET coins=? WHERE discordID=?");
-                ps.setInt(1, newcoins);
+                try {
+                    ps.setInt(1, newcoins);
+                } catch(NullPointerException nullPointerException) {
+                    nullPointerException.printStackTrace();
+                }
                 ps.setString(2, discordID);
                 ps.executeUpdate();
                 ps.close();
@@ -36,7 +44,11 @@ public class CoinSystem {
         } else {
             try {
                 PreparedStatement ps = MySQL.getPreparedStatement("INSERT INTO users(discordID, coins) VALUES (?, ?);");
-                ps.setString(1, discordID);
+                try {
+                    ps.setString(1, discordID);
+                } catch(NullPointerException nullPointerException) {
+                    nullPointerException.printStackTrace();
+                }
                 ps.setInt(2, coins);
                 ps.executeUpdate();
                 ps.close();
@@ -51,7 +63,11 @@ public class CoinSystem {
         MySQL.update("UPDATE users SET level=" + level + " WHERE discordID=" + discordID + ";");
         try {
             PreparedStatement ps = MySQL.getPreparedStatement("UPDATE users SET level=? WHERE discordID=?");
-            ps.setInt(1, level);
+            try {
+                ps.setInt(1, level);
+            } catch(NullPointerException nullPointerException) {
+                nullPointerException.printStackTrace();
+            }
             ps.setString(2, discordID);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -63,7 +79,11 @@ public class CoinSystem {
 
         try {
             PreparedStatement ps = MySQL.getPreparedStatement("SELECT coins FROM users WHERE discordID=?");
-            ps.setString(1, discordID);
+            try {
+                ps.setString(1, discordID);
+            } catch(NullPointerException nullPointerException) {
+                nullPointerException.printStackTrace();
+            }
             ResultSet rs = ps.executeQuery();
             rs.next();
             return rs.getInt("coins");

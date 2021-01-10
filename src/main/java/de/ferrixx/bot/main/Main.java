@@ -18,8 +18,6 @@ import java.io.InputStreamReader;
 
 public class Main {
 
-    // TODO: Stop using deprecated methods in MessageListener, Unused methods, Missing checks for NullPointerExceptions
-
     public static DiscordApi api;
 
     public static void main(String[] args) throws IOException {

@@ -31,14 +31,9 @@ public class Mutes {
 
             ps.setString(1, discordID);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) { // I doubt rs.next() is even needed here
+            if (rs.next()) {
                 return Timestamp.valueOf(rs.getString("unmute"));
             }
-            /*if (rs.next() && (!rs.getString("unmute").isEmpty() || rs.getString("unmute") != null || rs != null)) {
-                return Timestamp.valueOf(rs.getString("unmute"));
-            } // should now work | Nope, your if condition was redundant because of the OR rs != null. If rs was null
-            you'd get an NullPointerException at rs.next() and when you don't the whole if condition automatically
-            becomes true*/
             return null;
         } catch (SQLException e) {
             return null;

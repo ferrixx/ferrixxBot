@@ -91,7 +91,7 @@ public class MySQL {
             try {
                 return con.prepareStatement(qry);
             } catch (SQLException e) {
-                // U do that
+
             }
         }
         return null;
