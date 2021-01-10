@@ -1,3 +1,10 @@
 
 src/main/java/de/ferrixx/bot/settings/privates.java
 build/
+.gradle/6.3/executionHistory/executionHistory.bin
+.gradle/6.3/executionHistory/executionHistory.lock
+.gradle/6.3/fileHashes/fileHashes.bin
+.gradle/6.3/fileHashes/fileHashes.lock
+.gradle/6.3/javaCompile/classAnalysis.bin
+.gradle/6.3/javaCompile/javaCompile.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
