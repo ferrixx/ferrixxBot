@@ -1,6 +1,6 @@
 package de.ferrixx.bot.utils;
 
-import de.ferrixx.bot.settings.privates;
+import de.ferrixx.bot.settings.Privates;
 
 import java.sql.*;
 /*
@@ -14,7 +14,7 @@ public class MySQL {
     public static void devconnect() {
         if(!isConnected()) {
             try {
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", privates.username, privates.devpassword);
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", Privates.username, Privates.devpassword);
                 System.out.println("Datenbank Verbindung aufgebaut!");
             }catch (SQLException e) {
                 System.out.println("Fehler beim Aufbau der Datenbank Verbindung!" + e.getMessage());
@@ -25,7 +25,7 @@ public class MySQL {
     public static void connect() {
         if(!isConnected()) {
             try {
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", privates.username, privates.password);
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/discord?characterEncoding=utf8&autoReconnect=true", Privates.username, Privates.password);
                 System.out.println("Datenbank Verbindung aufgebaut!");
             }catch (SQLException e) {
                 e.printStackTrace();
@@ -89,7 +89,7 @@ public class MySQL {
             try{
                 return con.prepareStatement(qry);
             } catch(SQLException e) {
-    // U do that
+                // U do that
             }
         }
         return  null;
