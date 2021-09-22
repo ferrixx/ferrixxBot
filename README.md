@@ -1,13 +1,15 @@
 <h1 align="center">Welcome to ferrixxBot 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.7.7-blue.svg?cacheSeconds=2592000" />
-  <a href="#" target="_blank">
-    <img alt="License: Apache" src="https://img.shields.io/badge/License-Apache-yellow.svg" />
-  </a>
-  <a href="https://twitter.com/ferrixx1" target="_blank">
-    <img alt="Twitter: ferrixx1" src="https://img.shields.io/twitter/follow/ferrixx1.svg?style=social" />
-  </a>
-</p>
+
+_Social buttons_
+
+[![ferrixx - ferrixxBot](https://img.shields.io/static/v1?label=ferrixx&message=ferrixxBot&color=blue&logo=github)](https://github.com/ferrixx/ferrixxBot)
+[![stars - ferrixxBot](https://img.shields.io/github/stars/ferrixx/ferrixxBot?style=social)](https://github.com/ferrixx/ferrixxBot)
+[![forks - ferrixxBot](https://img.shields.io/github/forks/ferrixx/ferrixxBot?style=social)](https://github.com/ferrixx/ferrixxBot)
+
+_Repo metadata_
+
+[![GitHub tag](https://img.shields.io/github/tag/ferrixx/ferrixxBot?include_prereleases=&sort=semver&color=blue)](https://github.com/ferrixx/ferrixxBot/releases/)
+[![License](https://img.shields.io/badge/License-Apache2-blue)](#license)
 
 > ferrixxBot is a DiscordBot written in Java with the <a href="https://javacord.org">Javacord API</a>
 
@@ -67,6 +69,10 @@ Contributions, issues and feature requests are welcome!<br />Feel free to check 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
+
+## License
+
+Released under [Apache2](/LICENSE) by [@ferrixx](https://github.com/ferrixx).
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
