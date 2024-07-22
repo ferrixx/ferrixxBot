@@ -44,7 +44,7 @@ The Command syntax is !<command> <args>
 ## ✔️ Run tests
 
 ```sh
-!ping on you Discord Server to Test if the Bot is working.
+!ping > on you Discord Server to Test if the Bot is working.
 ```
 
 ## 🎞 Tutorial
